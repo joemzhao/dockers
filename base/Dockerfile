@@ -2,6 +2,10 @@ FROM ubuntu:20.04
 
 LABEL org.opencontainers.image.authors="mengjie.zhao@outlook.com"
 
+ENV TZ=Asia/Tokyo
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 USER root
 
 RUN apt-get update && \
@@ -26,11 +30,12 @@ RUN apt-get install -y \
     && apt-get clean 
 
 # shell
-RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
+RUN git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh \
     && cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc \
     && chsh -s /bin/zsh
 
 # Configure locales
+RUN apt-get install -y locales
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
